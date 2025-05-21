@@ -13,8 +13,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   Future<RecipeDataModel>? _recipesFuture;
 
-  Future<RecipeDataModel> getRecipesData_via_APi() async {
-    String baseUrl = "https://dummyjson.com/recipes";
+  Future<RecipeDataModel> fetchRecipesData() async {
+    const String baseUrl = "https://dummyjson.com/recipes";
     var response = await http.get(Uri.parse(baseUrl));
     return RecipeDataModel.fromJson(jsonDecode(response.body));
   }
@@ -24,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _recipesFuture = getRecipesData_via_APi();
+    _recipesFuture = fetchRecipesData();
   }
 
   @override
@@ -243,73 +243,83 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// Builds an individual recipe card
   Widget _buildRecipeCard(RecipeModel recipe) {
-    return Container(
-      padding: EdgeInsets.all(12),
-      margin: EdgeInsets.symmetric(vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 2)),
-        ],
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Recipe image
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Image.network(
-              recipe.image,
-              width: 100,
-              height: 100,
-              fit: BoxFit.cover,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) return child;
-                return Container(
-                  width: 100,
-                  height: 100,
-                  color: Colors.grey[200],
-                  child: Center(child: CircularProgressIndicator()),
-                );
-              },
-              errorBuilder:
-                  (context, error, stackTrace) => Container(
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(context, "/RecipeDetails", arguments: {
+          recipe: recipe,
+        });
+      },
+      child: Container(
+        padding: EdgeInsets.all(12),
+        margin: EdgeInsets.symmetric(vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black12, blurRadius: 6, offset: Offset(0, 2)),
+          ],
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Recipe image
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.network(
+                recipe.image,
+                width: 100,
+                height: 100,
+                fit: BoxFit.cover,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Container(
                     width: 100,
                     height: 100,
                     color: Colors.grey[200],
-                    child: Icon(Icons.broken_image),
-                  ),
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                },
+                errorBuilder:
+                    (context, error, stackTrace) =>
+                    Container(
+                      width: 100,
+                      height: 100,
+                      color: Colors.grey[200],
+                      child: Icon(Icons.broken_image),
+                    ),
+              ),
             ),
-          ),
 
-          SizedBox(width: 12),
+            SizedBox(width: 12),
 
-          // Recipe details
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  recipe.name,
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
+            // Recipe details
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    recipe.name,
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-                _buildRecipeDetail(
-                  "Prep Time",
-                  "${recipe.prepTimeMinutes} min",
-                ),
-                _buildRecipeDetail(
-                  "Cook Time",
-                  "${recipe.cookTimeMinutes} min",
-                ),
-                _buildRecipeDetail("Calories", "${recipe.caloriesPerServing}"),
-              ],
+                  _buildRecipeDetail(
+                    "Prep Time",
+                    "${recipe.prepTimeMinutes} min",
+                  ),
+                  _buildRecipeDetail(
+                    "Cook Time",
+                    "${recipe.cookTimeMinutes} min",
+                  ),
+                  _buildRecipeDetail(
+                      "Calories", "${recipe.caloriesPerServing}"),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
