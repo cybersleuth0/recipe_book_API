@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:recipes_via_api/HomeScreen.dart';
 
-import 'DetailsScreen.dart';
+import 'App Constant/constant.dart';
 
 void main() {
   runApp(
       MaterialApp(
-          initialRoute: "/Homepage",
-          routes: {
-            "/Homepage": (context) => HomeScreen(),
-            "/RecipeDetails": (context) => DetailsScreen(),
-          },
+          initialRoute: AppRoutes.ROUTE_HOME,
+          routes: AppRoutes.getRoutes(),
           theme: ThemeData(useMaterial3: true),
           debugShowCheckedModeBanner: false));
 }

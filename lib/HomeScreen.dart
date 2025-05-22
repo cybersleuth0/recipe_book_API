@@ -5,6 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:recipes_via_api/Models/models.dart';
 
+import 'App Constant/constant.dart';
+
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -243,11 +245,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// Builds an individual recipe card
   Widget _buildRecipeCard(RecipeModel recipe) {
-    return GestureDetector(
+    return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, "/RecipeDetails", arguments: {
-          recipe: recipe,
-        });
+        Navigator.pushNamed(
+          context,
+          AppRoutes.ROUTE_RECIPE_DETAILS,
+          arguments: {"recipe": recipe},
+        );
       },
       child: Container(
         padding: EdgeInsets.all(12),
@@ -257,7 +261,10 @@ class _HomeScreenState extends State<HomeScreen> {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-                color: Colors.black12, blurRadius: 6, offset: Offset(0, 2)),
+              color: Colors.black12,
+              blurRadius: 6,
+              offset: Offset(0, 2),
+            ),
           ],
         ),
         child: Row(
@@ -281,8 +288,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 },
                 errorBuilder:
-                    (context, error, stackTrace) =>
-                    Container(
+                    (context, error, stackTrace) => Container(
                       width: 100,
                       height: 100,
                       color: Colors.grey[200],
@@ -314,7 +320,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     "${recipe.cookTimeMinutes} min",
                   ),
                   _buildRecipeDetail(
-                      "Calories", "${recipe.caloriesPerServing}"),
+                    "Calories",
+                    "${recipe.caloriesPerServing}",
+                  ),
                 ],
               ),
             ),

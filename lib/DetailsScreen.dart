@@ -16,7 +16,11 @@ class _DetailsSreenState extends State<DetailsScreen> {
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     RecipeModel recipe = args["recipe"];
     return Scaffold(
-      body: Column(children: [Text("${recipe.caloriesPerServing}")]),
+      appBar: AppBar(),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(children: [Text("${recipe.caloriesPerServing}")]),
+      ),
     );
   }
 }
